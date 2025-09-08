@@ -1,8 +1,10 @@
+from itertools import combinations
+
 def solution(numbers):
     answer = []
-    for i in range(0, len(numbers)):
-        for k in range(i+1, len(numbers)):
-            answer.append(numbers[i]+numbers[k])
-    return sorted(list(set(answer)))
-            
+    
+    bob = list(combinations(numbers, 2))
+    for i in bob:
+        answer.append(i[0]+i[1])
         
+    return sorted(list(set(answer)))
