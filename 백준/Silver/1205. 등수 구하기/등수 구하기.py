@@ -1,19 +1,16 @@
-n, t, p = map(int, input().split())
+n, score, p = map(int, input().split())
+
 if n == 0:
     print(1)
     exit()
-
-rank_list = list(map(int, input().split()))
-
-rank_list.sort(reverse=True)
+    
+arr = list(map(int, input().split()))
 rank = 1
 
-if n >= p and rank_list[-1] >= t:
-    print(-1)
-    exit()
-    
-for i in range(n):
-    if rank_list[i] > t:
+for i in arr:
+    if i > score:
         rank += 1
 
-print(rank)
+if p < rank or (min(arr) == score and p == n):
+    print(-1)
+else: print(rank)
