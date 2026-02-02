@@ -18,9 +18,10 @@ public class Main {
                 if (student[i][j] == 0){
                     continue;
                 }
-                if (student[i][j] > K){
-                    cnt += student[i][j] / K + 1;
-                } else cnt++;
+                cnt += student[i][j] / K;
+                if (student[i][j] % K != 0){
+                    cnt++;
+                }
             }
         }
         System.out.println(cnt);
