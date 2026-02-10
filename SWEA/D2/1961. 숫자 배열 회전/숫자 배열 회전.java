@@ -3,6 +3,18 @@ import java.util.Scanner;
 import java.io.FileInputStream;
 
 class Solution {
+
+	private static int[][] rotate(int n, int[][] map) {
+		int[][] temp = new int[n][n];
+		for (int i = 0; i < n; i++) {
+			for (int k = 0; k < n; k++) {
+				temp[i][k] = map[n - k - 1][i];
+			}
+		}
+
+		return temp;
+	}
+
 	public static void main(String args[]) throws Exception {
 		Scanner sc = new Scanner(System.in);
 		int T;
@@ -16,43 +28,22 @@ class Solution {
 					map[i][k] = sc.nextInt();
 				}
 			}
-
-			// 90도
-			int[][] ninety = new int[n][n];
-			for (int i = 0; i < n; i++) {
-				for (int k = 0; k < n; k++) {
-					ninety[i][k] = map[n - k - 1][i];
-				}
-			}
-
-			// 180도
-			int[][] hundredseighty = new int[n][n];
-			for (int i = 0; i < n; i++) {
-				for (int k = 0; k < n; k++) {
-					hundredseighty[i][k] = map[n - i - 1][n - k - 1];
-				}
-			}
-
-			// 270도
-			int[][] twoseven = new int[n][n];
-			for (int i = 0; i < n; i++) {
-				for (int k = 0; k < n; k++) {
-					twoseven[i][k] = map[k][n - i - 1];
-				}
-			}
+			int[][] r90 = rotate(n, map);
+			int[][] r180 = rotate(n, r90);
+			int[][] r270 = rotate(n, r180);
 
 			System.out.println("#" + test_case);
 			for (int i = 0; i < n; i++) {
 				for (int k = 0; k < n; k++) {
-					System.out.print(ninety[i][k]);
+					System.out.print(r90[i][k]);
 				}
 				System.out.print(" ");
 				for (int k = 0; k < n; k++) {
-					System.out.print(hundredseighty[i][k]);
+					System.out.print(r180[i][k]);
 				}
 				System.out.print(" ");
 				for (int k = 0; k < n; k++) {
-					System.out.print(twoseven[i][k]);
+					System.out.print(r270[i][k]);
 				}
 				System.out.println();
 			}
