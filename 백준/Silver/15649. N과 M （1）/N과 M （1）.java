@@ -1,35 +1,44 @@
 import java.util.*;
 
 public class Main {
+	static int n, m;
 	static int[] com;
-	static boolean[] visited;
-	static int n, m; // m개 고르기
+	static int[] num;
+	static boolean visit[];
 
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
 		n = sc.nextInt();
 		m = sc.nextInt();
+		num = new int[n];
 		com = new int[m];
-		visited = new boolean[n + 1];
+		visit = new boolean[n];
+
+		for (int i = 0; i < n; i++) {
+			num[i] = i + 1;
+		}
+
 		combination(0);
+
 	}
 
-	private static void combination(int sidx) {
-		if (sidx == m) {
-			for (int i : com) {
-				System.out.print(i + " ");
+	public static void combination(int idx) {
+		if (idx == m) {
+			for (int n : com) {
+				System.out.print(n + " ");
 			}
 			System.out.println();
 			return;
-		} 
-		for (int i = 1; i <= n; i++) {
-			if (!visited[i]) {
-				visited[i] = true;
-				com[sidx] = i;
-				
-				combination(sidx + 1);
-				visited[i] = false;
+		}
+
+		for (int i = 0; i < n; i++) {
+			if (!visit[i]) {
+				visit[i] = true;
+				com[idx] = num[i];
+				combination(idx + 1);
+				visit[i] = false;
 			}
+
 		}
 	}
 }
