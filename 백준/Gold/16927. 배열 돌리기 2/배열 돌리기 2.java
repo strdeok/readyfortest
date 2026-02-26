@@ -1,117 +1,88 @@
+import java.io.*;
 import java.util.*;
 
 public class Main {
-	static int n;
-	static int m;
-	static int r;
-	static int[][] map;
-	static int[][] result;
+    static int n, m, r;
+    static int[][] map;
+    static int[][] result;
 
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
-		n = sc.nextInt();
-		m = sc.nextInt();
-		r = sc.nextInt();
-		map = new int[n][m];
-		result = new int[n][m];
+    public static void main(String[] args) throws IOException {
+        // 시간 초과 방지를 위한 프로들의 국룰 입출력 세팅
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        
+        n = Integer.parseInt(st.nextToken());
+        m = Integer.parseInt(st.nextToken());
+        r = Integer.parseInt(st.nextToken());
+        
+        map = new int[n][m];
+        result = new int[n][m];
 
-		for (int i = 0; i < n; i++) {
-			for (int k = 0; k < m; k++) {
-				map[i][k] = sc.nextInt();
-			}
-		}
+        for (int i = 0; i < n; i++) {
+            st = new StringTokenizer(br.readLine());
+            for (int k = 0; k < m; k++) {
+                map[i][k] = Integer.parseInt(st.nextToken());
+            }
+        }
+        
+        int layer = Math.min(n, m) / 2;
 
-		// 몇 중인지 구하기
-		int layer = calculateSquareLayer();
+        for (int i = 1; i <= layer; i++) {
+            rotateSquare(i);
+        }
 
-		for (int i = 1; i <= layer; i++) {
-			rotateSquare(i);
-		}
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < n; i++) {
+            for (int k = 0; k < m; k++) {
+                sb.append(result[i][k]).append(" ");
+            }
+            sb.append("\n");
+        }
+        System.out.print(sb.toString());
+    }
 
-		for (int[] x : result) {
-			for (int y : x) {
-				System.out.print(y + " ");
-			}
-			System.out.println();
-		}
-	}
+    static void rotateSquare(int layer) {
+        // 하, 우, 상, 좌 (반시계 탐색)
+        int[] dx = { 0, 1, 0, -1 };
+        int[] dy = { 1, 0, -1, 0 };
+        
+        int count = (m - (2 * (layer - 1))) * 2 + (n - 2 * layer) * 2;
+        
+        int[] temp = new int[count]; 
+        
+        int direction = 0;
+        int nowX = layer - 1;
+        int nowY = layer - 1;
+        
+        for (int i = 0; i < count; i++) {
+            temp[i] = map[nowY][nowX];
+            
+            if (nowX == layer - 1 && nowY == n - layer) direction = 1;
+            else if (nowX == m - layer && nowY == n - layer) direction = 2;
+            else if (nowX == m - layer && nowY == layer - 1) direction = 3;
 
-	static int calculateSquareLayer() {
-		int total = n * m;
-		int layer = 1;
-		while (total > 0) {
-			int next = (m - (2 * (layer - 1))) * 2 + (n - 2 * layer) * 2;
-			total = total - next;
-			if (total == 0)
-				break;
-			layer++;
-		}
-		return layer;
-	}
+            nowX += dx[direction];
+            nowY += dy[direction];
+        }
 
-	static void rotateSquare(int layer) {
-		Queue<Integer> q = new LinkedList<>();
-		// 하 우 상 좌
-		int[] dx = { 0, 1, 0, -1 };
-		int[] dy = { 1, 0, -1, 0 };
-		int direction = 0;
-		int count = (m - (2 * (layer - 1))) * 2 + (n - 2 * layer) * 2;
-		int nowX = layer - 1;
-		int nowY = layer - 1;
-		for (int i = 0; i < count; i++) {
-			// 좌상단 하
-			if (nowX == layer - 1 && nowY == layer - 1) {
-				direction = 0;
-			}
-			// 좌하단 우
-			if (nowX == layer - 1 && nowY == n - layer) {
-				direction = 1;
-			}
-			// 우상단 좌
-			if (nowY == layer - 1 && nowX == m - layer) {
-				direction = 3;
-			}
-			// 우하단 상
-			if (nowY == n - layer && nowX == m - layer) {
-				direction = 2;
-			}
+        
+        int actualRotate = r % count; 
+        
+        direction = 0;
+        nowX = layer - 1;
+        nowY = layer - 1;
+        
+        for (int i = 0; i < count; i++) {
+            int targetIdx = (i + count - actualRotate) % count;
+            
+            result[nowY][nowX] = temp[targetIdx];
+            
+            if (nowX == layer - 1 && nowY == n - layer) direction = 1;
+            else if (nowX == m - layer && nowY == n - layer) direction = 2;
+            else if (nowX == m - layer && nowY == layer - 1) direction = 3;
 
-			nowX = nowX + dx[direction];
-			nowY = nowY + dy[direction];
-
-			q.offer(map[nowY][nowX]);
-		}
-		int actualRotate = r % count;
-		for (int i = 0; i < Math.abs(count - actualRotate); i++) {
-			int head = q.poll();
-			q.offer(head);
-		}
-		direction = 0;
-		nowX = layer - 1;
-		nowY = layer - 1;
-		for (int i = 0; i < count; i++) {
-			// 좌상단 하
-			if (nowX == layer - 1 && nowY == layer - 1) {
-				direction = 0;
-			}
-			// 좌하단 우
-			if (nowX == layer - 1 && nowY == n - layer) {
-				direction = 1;
-			}
-			// 우상단 좌
-			if (nowY == layer - 1 && nowX == m - layer) {
-				direction = 3;
-			}
-			// 우하단 상
-			if (nowY == n - layer && nowX == m - layer) {
-				direction = 2;
-			}
-
-			nowX = nowX + dx[direction];
-			nowY = nowY + dy[direction];
-
-			result[nowY][nowX] = q.poll();
-		}
-
-	}
+            nowX += dx[direction];
+            nowY += dy[direction];
+        }
+    }
 }
