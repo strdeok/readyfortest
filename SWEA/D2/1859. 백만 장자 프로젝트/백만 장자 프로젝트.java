@@ -7,19 +7,20 @@ class Solution {
 		int T = sc.nextInt();
 		for (int test_case = 1; test_case <= T; test_case++) {
 			int n = sc.nextInt();
-			int[] money = new int[n];
+			Stack<Integer> st = new Stack<>();
 			int Max_profit = 0;
 			long result = 0;
 
 			for (int i = 0; i < n; i++) {
-				money[i] = sc.nextInt();
+				st.add(sc.nextInt());
 			}
 			
-			for (int i = n - 1; i >= 0; i--) {			
-				if (money[i] < Max_profit) {
-					result += Max_profit - money[i];
+			while (!st.isEmpty()) {
+				int num = st.pop();
+				if (num > Max_profit) {
+					Max_profit = num;
 				} else {
-					Max_profit = Math.max(Max_profit, money[i]);
+					result += Max_profit - num;
 				}
 			}
 			
