@@ -2,7 +2,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.StringTokenizer;
 
 class Fireball {
@@ -21,6 +20,7 @@ class Fireball {
 class Main {
 	static int n, m, k;
 	static ArrayList<Fireball> fireballs = new ArrayList<>();
+	static ArrayList<Fireball> newFireballs;
 
 	// 상 우상 우 우하 하 좌하 좌 좌상
 	static int[] dx = { -1, -1, 0, 1, 1, 1, 0, -1 };
@@ -46,7 +46,9 @@ class Main {
 		}
 
 		for (int i = 0; i < k; i++) {
+			newFireballs = new ArrayList<>();
 			simulate();
+			fireballs = newFireballs;
 		}
 
 		int sum = 0;
@@ -63,26 +65,8 @@ class Main {
 			int x = f.x;
 			int y = f.y;
 
-			int nx = x + f.s * dx[f.d];
-			int ny = y + f.s * dy[f.d];
-
-			// 넘어가면?
-			// 0보다 크면 n 빼기
-			// 0 아래면 +n
-			while (nx < 0 || ny < 0 || nx >= n || ny >= n) {
-				if (nx < 0) {
-					nx += n;
-				}
-				if (ny < 0) {
-					ny += n;
-				}
-				if (nx >= n) {
-					nx -= n;
-				}
-				if (ny >= n) {
-					ny -= n;
-				}
-			}
+			int nx = (x + f.s * dx[f.d] + n * f.s) % n;
+			int ny = (y + f.s * dy[f.d] + n * f.s) % n;
 
 			f.x = nx;
 			f.y = ny;
@@ -93,6 +77,13 @@ class Main {
 			for (int y = 0; y < n; y++) {
 				if (graph[x][y] > 1) {
 					calculate(graph[x][y], x, y);
+				} else if (graph[x][y] == 1) {
+					for (Fireball f : fireballs) {
+						if (f.x == x && f.y == y) {
+							newFireballs.add(f);
+							break; 
+						}
+					}
 				}
 			}
 		}
@@ -117,12 +108,11 @@ class Main {
 			mass += f.m;
 			speed += f.s;
 			if (f.d % 2 == 0) {
-				isAllEven = false;
-			}
-			if (f.d % 2 != 0) {
 				isAllOdd = false;
 			}
-			fireballs.remove(f);
+			if (f.d % 2 != 0) {
+				isAllEven = false;
+			}
 		}
 
 		int dir = 0;
@@ -137,7 +127,8 @@ class Main {
 				break;
 			}
 			Fireball fb = new Fireball(x, y, mass / 5, speed / cnt, dir);
-			fireballs.add(fb);
+			newFireballs.add(fb);
 		}
+
 	}
 }
