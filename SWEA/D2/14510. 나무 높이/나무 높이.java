@@ -1,56 +1,49 @@
 import java.util.*;
 
 class Solution {
-	static int n;
-	static int[] trees;
-	static int MAX;
-	static int Day;
+    public static void main(String args[]) throws Exception {
+        Scanner sc = new Scanner(System.in);
+        int T = sc.nextInt();
+        for (int test_case = 1; test_case <= T; test_case++) {
+            int n = sc.nextInt();
+            int[] trees = new int[n];
+            int MAXHEIGHT = Integer.MIN_VALUE;
 
-	public static void main(String args[]) throws Exception {
-		Scanner sc = new Scanner(System.in);
-		int T = sc.nextInt();
-		for (int test_case = 1; test_case <= T; test_case++) {
-			n = sc.nextInt();
-			trees = new int[n];
-			MAX = 0;
-			Day = 0;
+            int oddCnt = 0;
+            int evenCnt = 0;
 
-			for (int i = 0; i < n; i++) {
-				trees[i] = sc.nextInt();
-			}
-			getMAX();
-			calculate();
-			System.out.println("#" + test_case + " " + Day);
-		}
-	}
+            for (int i = 0; i < n; i++) {
+                int h = sc.nextInt();
+                trees[i] = h;
+                MAXHEIGHT = Math.max(MAXHEIGHT, h);
+            }
 
-	static void getMAX() {
-		for (int i = 0; i < n; i++) {
-			MAX = Math.max(trees[i], MAX);
-		}
-	}
+            for (int i = 0; i < n; i++) {
+                int h = trees[i];
+                oddCnt += (MAXHEIGHT - h) % 2;
+                evenCnt += (MAXHEIGHT - h) / 2;
+            }
 
-	static void calculate() {
-	    int cnt1 = 0;
-	    int cnt2 = 0;
+            while (evenCnt - oddCnt > 1) {
+                evenCnt--;
+                oddCnt += 2;
+            }
 
-	    for (int i = 0; i < n; i++) {
-	        int goal = MAX - trees[i];
-	        cnt1 += goal % 2;
-	        cnt2 += goal / 2;
-	    }
+            int answer = 0;
+            if (evenCnt == oddCnt) {
+                answer = evenCnt + oddCnt;
+            }
 
-	    while (cnt2 > cnt1 + 1) {
-	        cnt2 -= 1;
-	        cnt1 += 2;
-	    }
+            if (evenCnt > oddCnt) {
+                answer = evenCnt * 2;
+            }
 
-	    if (cnt1 > cnt2) {
-	        Day = cnt1 * 2 - 1;
-	    } else if (cnt2 > cnt1) {
-	        Day = cnt2 * 2;
-	    } else {
-	        Day = cnt1 + cnt2;
-	    }
-	}
+            if (evenCnt < oddCnt) {
+                answer = oddCnt * 2 - 1;
+            }
+
+            System.out.println("#" + test_case + " " + answer);
+        }
+    }
+
 }
