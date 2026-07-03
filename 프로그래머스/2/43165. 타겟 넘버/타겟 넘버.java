@@ -11,12 +11,14 @@ class Solution {
     }
 
     void dfs(int index, int now, int target) {
-        if (index > N) return;
-        if (target == now && index == N) {
-            cnt++;
+        if (index == N) {
+            if (target == now) {
+                cnt++;
+                return;
+            }
             return;
-        } else if (index == N) return;
-        dfs(index+1, now + nums[index], target);
-        dfs(index+1, now - nums[index], target);
+        }
+        dfs(index + 1, now + nums[index], target);
+        dfs(index + 1, now - nums[index], target);
     }
 }
