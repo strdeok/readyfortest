@@ -1,10 +1,11 @@
 def solution(array, commands):
     answer = []
-    
-    for i in commands:
-        copied = array
-        changed = (copied[i[0]-1:i[1]])
-        changed.sort()
-        answer.append(changed[i[2]-1])
-        
+    for c in commands:
+        cp = array
+        i = c[0]
+        j = c[1]
+        k = c[2]
+        sliced = cp[i - 1 : j]
+        sliced.sort()
+        answer.append(sliced[k - 1])
     return answer
